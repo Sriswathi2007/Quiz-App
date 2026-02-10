@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Yellow Pink Quiz App</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffe066, #ff6fae);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  /* WHITE BOX */
+  .quiz-container {
+    background: #ffffff;   /* PURE WHITE */
+    padding: 25px;
+    width: 360px;
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    text-align: center;
+    border: 4px solid #ff6fae;
+  }
+
+  h2 {
+    color: #c0266d;
+    margin-bottom: 15px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    background: #fff3b0;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px solid #ffd54f;
+    transition: 0.3s;
+    color: #7a0044;
+    font-weight: 500;
+  }
+
+  li:hover {
+    background: #ffd1e8;
+    border-color: #ff6fae;
+  }
+
+  .selected {
+    background: #ffb3d9;
+    border-color: #ff1493;
+    font-weight: bold;
+  }
+
+  button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background: #ff6fae;
+    color: white;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #ff1493;
+  }
+
+  #score {
+    font-size: 20px;
+    color: #15803d;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+
+  .hide {
+    display: none;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="quiz-container">
+  <h2 id="question">Question</h2>
+  <ul id="options"></ul>
+  <button id="nextBtn">Next</button>
+  <p id="score" class="hide"></p>
+</div>
+
+<script>
+  const quizData = [
+    { question: "What does DOM stand for?", options: ["Document Object Model", "Data Object Method", "Digital Output Mode"], correct: 0 },
+    { question: "Which language is used for DOM manipulation?", options: ["HTML", "CSS", "JavaScript"], correct: 2 },
+    { question: "Which method selects an element by ID?", options: ["getElement()", "querySelector()", "getElementById()"], correct: 2 },
+    { question: "Which symbol is used for comments in JavaScript?", options: ["//", "<!-- -->", "#"], correct: 0 },
+    { question: "Which event occurs when a button is clicked?", options: ["onhover", "onclick", "onchange"], correct: 1 },
+    { question: "Which keyword is used to declare a variable?", options: ["int", "var", "define"], correct: 1 },
+    { question: "Which function adds an element to the DOM?", options: ["appendChild()", "addElement()", "insertNode()"], correct: 0 },
+    { question: "Which method removes a class?", options: ["classList.remove()", "class.remove()", "removeClass()"], correct: 0 },
+    { question: "Which tag is used to link JavaScript?", options: ["<js>", "<script>", "<link>"], correct: 1 },
+    { question: "Which method selects all matching elements?", options: ["getElementById()", "querySelector()", "querySelectorAll()"], correct: 2 }
+  ];
+
+  const questionEl = document.getElementById("question");
+  const optionsEl = document.getElementById("options");
+  const nextBtn = document.getElementById("nextBtn");
+  const scoreEl = document.getElementById("score");
+
+  let currentQuestion = 0;
+  let score = 0;
+  let selectedOption = null;
+
+  loadQuestion();
+
+  function loadQuestion() {
+    selectedOption = null;
+    optionsEl.innerHTML = "";
+    const q = quizData[currentQuestion];
+    questionEl.textContent = `Q${currentQuestion + 1}. ${q.question}`;
+
+    q.options.forEach((option, index) => {
+      const li = document.createElement("li");
+      li.textContent = option;
+      li.onclick = () => {
+        document.querySelectorAll("li").forEach(i => i.classList.remove("selected"));
+        li.classList.add("selected");
+        selectedOption = index;
+      };
+      optionsEl.appendChild(li);
+    });
+  }
+
+  nextBtn.onclick = () => {
+    if (selectedOption === null) {
+      alert("Please select an option!");
+      return;
+    }
+    if (selectedOption === quizData[currentQuestion].correct) score++;
+    currentQuestion++;
+    currentQuestion < quizData.length ? loadQuestion() : showResult();
+  };
+
+  function showResult() {
+    questionEl.textContent = "Quiz Completed 🎉";
+    optionsEl.innerHTML = "";
+    nextBtn.classList.add("hide");
+    scoreEl.classList.remove("hide");
+    scoreEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+  }
+</script>
+
+</body>
+</html>
